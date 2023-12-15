@@ -4,9 +4,11 @@ import time
 
 vid = cv2.VideoCapture(0)
 
+character = "W" # @#$█W
+
 def print_image(image):
 	image = cv2.resize(image, (os.get_terminal_size().columns, os.get_terminal_size().lines))
-	line = "".join(["".join([f"\033[38;2;{pixel[2]};{pixel[1]};{pixel[0]}m$" for pixel in row]) + "\n" for row in image])
+	line = "".join(["".join([f"\033[38;2;{pixel[2]};{pixel[1]};{pixel[0]}m{character}" for pixel in row]) + "\n" for row in image])
 	print(line)
 
 try: 
