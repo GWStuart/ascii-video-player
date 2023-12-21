@@ -7,8 +7,6 @@ vid = cv2.VideoCapture("ignored/video/bad_apple.mp4")
 fps = vid.get(cv2.CAP_PROP_FPS)
 
 try:
-    system("cls")
-
     while True:
         ret, frame = vid.read()
         if not ret:

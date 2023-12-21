@@ -11,8 +11,6 @@ vid = cap_from_youtube(url, "144p")
 fps = vid.get(cv2.CAP_PROP_FPS)
 
 try:
-    system("cls")
-
     while True:
         ret, frame = vid.read()
         if not ret:

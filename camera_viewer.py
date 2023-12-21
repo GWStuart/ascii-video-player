@@ -5,8 +5,6 @@ from utils import *
 vid = cv2.VideoCapture(0)
 
 try:
-	system("cls")
-
 	fps = 10
 	prev = 0
 
