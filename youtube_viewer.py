@@ -1,15 +1,8 @@
 from cap_from_youtube import cap_from_youtube
 from time import sleep
-from os import system, get_terminal_size
+from os import system
 import cv2
-
-colour = True
-gradient = " .;w$"
-character = "█" # @#$█W
-
-def print_image(image):
-    image = cv2.resize(image, (get_terminal_size().columns, get_terminal_size().lines - 1))
-    print("\033[H" + "".join(["".join([f"\033[38;2;{pixel[2]};{pixel[1]};{pixel[0]}m{character}" for pixel in row]) + "\n" for row in image]), end='')
+from utils import *
 
 # url = "https://www.youtube.com/watch?v=ZQAvj5rdgtY"
 url = "https://www.youtube.com/watch?v=IcFD5OMwS4Q"
@@ -31,5 +24,4 @@ try:
 
 finally:
     vid.release() 
-    print(f"\033[{get_terminal_size().columns};{get_terminal_size().lines - 2}H")
-    print("\033[0m")
+    ascii_end()

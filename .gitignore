@@ -1,3 +1,4 @@
 /ignored
+/__pycache__
 tests.py
 temp.py

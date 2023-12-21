@@ -1,15 +1,8 @@
-from time import sleep, time
-from os import system, get_terminal_size
+from time import time
 import cv2
+from utils import *
 
 vid = cv2.VideoCapture(0)
-
-character = "█" # @#█$
-
-def print_image(image):
-    image = cv2.resize(image, (get_terminal_size().columns, get_terminal_size().lines - 1))
-    print("\033[H" + "".join(["".join([f"\033[38;2;{pixel[2]};{pixel[1]};{pixel[0]}m{character}" for pixel in row]) + "\n" for row in image]), end='')
-
 
 try:
 	system("cls")
@@ -26,6 +19,5 @@ try:
 
 			print_image(frame)
 finally:
-    vid.release() 
-    print(f"\033[{get_terminal_size().columns};{get_terminal_size().lines - 2}H")
-    print("\033[0m")
+    vid.release()
+    ascii_end()
