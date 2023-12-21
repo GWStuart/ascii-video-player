@@ -11,10 +11,12 @@ def print_image(image):
 	print(line)
 
 url = "https://www.youtube.com/watch?v=ZQAvj5rdgtY"
-vid = cap_from_youtube(url, "1440p60")
+url = "https://www.youtube.com/watch?v=IcFD5OMwS4Q"
+vid = cap_from_youtube(url, "144p")
 
 # vid = cv2.VideoCapture(best.url)
 fps = vid.get(cv2.CAP_PROP_FPS)
+print(fps)
 
 try: 
 	while True:
