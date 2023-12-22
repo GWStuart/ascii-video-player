@@ -4,7 +4,7 @@ import cv2
 from ffpyplayer.player import MediaPlayer
 from utils import *
 
-path = "ignored/video/crab_rave.mp4"
+path = "ignored/video/bad_apple.mp4"
 vid = cv2.VideoCapture(path)
 audio = MediaPlayer(path)
 
