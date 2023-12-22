@@ -2,6 +2,7 @@ from time import sleep, time
 from cap_from_youtube import cap_from_youtube
 from os import system, get_terminal_size
 from ffpyplayer.player import MediaPlayer
+import keyboard
 import cv2
 
 
@@ -20,18 +21,21 @@ def play_video(url): # plays a youtube video for the given url
 	fps = vid.get(cv2.CAP_PROP_FPS)
 
 	try:
-	    while True:
-	        ret, frame = vid.read()
-	        if not ret:
-	            break
+		while True:
+			ret, frame = vid.read()
+			if not ret:
+				break
 
-	        _print_ascii(frame)
-	        
-	        sleep(1/fps)
+			if keyboard.is_pressed("q"):
+				break
+
+			_print_ascii(frame)
+
+			sleep(1/fps)
 
 	finally:
-	    vid.release() 
-	    _ascii_end()
+		vid.release() 
+		_ascii_end()
 
 def print_image(path):
 	image = cv2.imread(path)
@@ -55,6 +59,9 @@ def play_mp4(path):
 	            #audio (idk what this does)
 	            img, t = audio_frame
 
+	        if keyboard.is_pressed("q"):
+	        	break
+
 	        _print_ascii(frame)
 
 	        sleep(1/fps)
@@ -72,6 +79,9 @@ def view_camera():
 		while True:
 			time_elapsed = time() - prev
 			ret, frame = vid.read()
+
+			if keyboard.is_pressed("q"):
+				break
 
 			if time_elapsed > 1/fps:
 				prev = time()
