@@ -12,6 +12,9 @@ render video.mp4 --> plays the mp4 video. Can be combined with the -m flag to pl
 render hhtps://  --> renders a youtube video given its url
 """
 
+# Supported image formats
+IMAGE_FORMATS = ("png", "jpg", "jpeg", "webp")
+
 parser = ArgumentParser(prog="render", description=description, formatter_class=RawDescriptionHelpFormatter)
 
 parser.add_argument("file", nargs="?", help="file to render")
@@ -21,17 +24,17 @@ parser.add_argument("-m", "--mute", action="store_true", help="play file in mute
 args = parser.parse_args()
 
 if args.file:
-	if args.file == "camera":
-		view_camera()
-	elif args.file[:5] == "https":
-		play_video(args.file)
-	else:
-		extension = args.file[-3:]
-		if extension in ["png", "jpg"]:
-			print_image(args.file)
-		elif extension in ["mp4"]:
-			play_mp4(args.file)
-		else:
-			print(f"unsupported file")
+    if args.file == "camera":
+        view_camera()
+    elif args.file[:5] == "https":
+        play_video(args.file)
+    else:
+        extension = args.file[args.file.index(".") + 1:]
+        if extension in IMAGE_FORMATS:
+            print_image(args.file)
+        elif extension in ["mp4"]:
+            play_mp4(args.file)
+        else:
+            print(f"unsupported file: {extension}")
 else:
     parser.print_help()
