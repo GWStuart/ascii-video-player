@@ -7,7 +7,10 @@ import cv2
 
 
 character = "█" # @#█$
-ascii_gradient = "@0r,."
+# ascii_gradient = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'."
+# ascii_gradient = "@0r,."
+# ascii_gradient = "@0r,. "
+ascii_gradient = "@%#*+=-:. "
 
 def _image_fit_to_screen(image):
     # Returns the image resized fit to terminal dimensions
@@ -43,11 +46,20 @@ def _render_grayscale(image):
         for pixel in row:
             print(f"\033[38;2;{pixel};{pixel};{pixel}m{character}", end="")
 
+def _render_ascii_gradient(image):
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    print("\033[H", end="")
+    for row in image:
+        for pixel in row:
+            character = ascii_gradient[round(pixel / 255 * (len(ascii_gradient) - 1))] 
+            print(character, end="")
+            # print(f"\033[38;2;{pixel};{pixel};{pixel}m{character}", end="")
+
 def _ascii_end():
     # print(f"\033[{get_terminal_size().lines - 1};{get_terminal_size().columns}H")
     print("\033[0m")
 
-def print_image(path, grayscale=False):
+def print_image(path, grayscale=False, ascii_gradient=False):
     image = cv2.imread(path)
     image = _image_fit_to_screen(image)
     # image = _image_fit_to_columns(image)
@@ -55,6 +67,8 @@ def print_image(path, grayscale=False):
     
     if grayscale:
         _render_grayscale(image)
+    elif ascii_gradient:
+        _render_ascii_gradient(image)
     else:
         _render_colour(image)
 

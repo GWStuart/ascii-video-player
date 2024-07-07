@@ -24,6 +24,7 @@ parser = ArgumentParser(prog="render", description=description, formatter_class=
 
 parser.add_argument("file", nargs="?", help="file to render")
 parser.add_argument("-g", "--gray-scale", action="store_true", help="render in grayscale")
+parser.add_argument("-a", "--ascii-gradient", action="store_true", help="render using an ascii gradient")
 parser.add_argument("-m", "--mute", action="store_true", help="for videos, play file in mute")
 
 args = parser.parse_args()
@@ -36,7 +37,7 @@ if args.file:
     else:
         extension = args.file[args.file.index(".") + 1:]
         if extension in IMAGE_FORMATS:
-            print_image(args.file, grayscale=args.gray_scale)
+            print_image(args.file, grayscale=args.gray_scale, ascii_gradient=args.ascii_gradient)
         elif extension in ["mp4"]:
             play_mp4(args.file)
         else:
