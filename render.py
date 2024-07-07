@@ -12,14 +12,19 @@ render video.mp4 --> plays the mp4 video. Can be combined with the -m flag to pl
 render hhtps://  --> renders a youtube video given its url
 """
 
+epilog = """
+Developed by GWStuart
+See GitHub page: https://github.com/GWStuart/ascii-video-player
+"""
+
 # Supported image formats
 IMAGE_FORMATS = ("png", "jpg", "jpeg", "webp")
 
-parser = ArgumentParser(prog="render", description=description, formatter_class=RawDescriptionHelpFormatter)
+parser = ArgumentParser(prog="render", description=description, formatter_class=RawDescriptionHelpFormatter, epilog=epilog)
 
 parser.add_argument("file", nargs="?", help="file to render")
 parser.add_argument("-g", "--gray-scale", action="store_true", help="render in grayscale")
-parser.add_argument("-m", "--mute", action="store_true", help="play file in mute")
+parser.add_argument("-m", "--mute", action="store_true", help="for videos, play file in mute")
 
 args = parser.parse_args()
 
@@ -31,7 +36,7 @@ if args.file:
     else:
         extension = args.file[args.file.index(".") + 1:]
         if extension in IMAGE_FORMATS:
-            print_image(args.file)
+            print_image(args.file, grayscale=args.gray_scale)
         elif extension in ["mp4"]:
             play_mp4(args.file)
         else:

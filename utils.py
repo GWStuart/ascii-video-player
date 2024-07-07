@@ -29,21 +29,35 @@ def _image_best_fit(image):
     num_columns = round(min(terminal_columns, terminal_rows / ratio))
     return cv2.resize(image, (num_columns, int(num_columns * ratio * 0.5)))
 
-def _print_ascii(image):
-    # image = cv2.resize(image, (get_terminal_size().columns, get_terminal_size().lines - 1))
-    print("\033[H" + "".join(["".join([f"\033[38;2;{pixel[2]};{pixel[1]};{pixel[0]}m{character}" for pixel in row]) + "\n" for row in image]), end='')
+def _render_colour(image):
+    # print("\033[H" + "".join("".join(f"\033[38;2;{pixel[2]};{pixel[1]};{pixel[0]}m{character}" for pixel in row) for row in image), end='')
+    print("\033[H", end="")
+    for row in image:
+        for pixel in row:
+            print(f"\033[38;2;{pixel[2]};{pixel[1]};{pixel[0]}m{character}", end="")
+
+def _render_grayscale(image):
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    print("\033[H", end="")
+    for row in image:
+        for pixel in row:
+            print(f"\033[38;2;{pixel};{pixel};{pixel}m{character}", end="")
 
 def _ascii_end():
     # print(f"\033[{get_terminal_size().lines - 1};{get_terminal_size().columns}H")
     print("\033[0m")
 
-def print_image(path):
+def print_image(path, grayscale=False):
     image = cv2.imread(path)
     image = _image_fit_to_screen(image)
     # image = _image_fit_to_columns(image)
     # image = _image_best_fit(image)
+    
+    if grayscale:
+        _render_grayscale(image)
+    else:
+        _render_colour(image)
 
-    _print_ascii(image)
     _ascii_end()
 
 def play_video(url): # plays a youtube video for the given url
@@ -59,7 +73,7 @@ def play_video(url): # plays a youtube video for the given url
             if keyboard.is_pressed("q"):
                 break
 
-            _print_ascii(frame)
+            _render_colour(frame)
 
             sleep(1/fps)
 
@@ -87,7 +101,7 @@ def play_mp4(path):
             if keyboard.is_pressed("q"):
                 break
 
-            _print_ascii(frame)
+            _render_colour(frame)
 
             sleep(1/fps)
     finally:
@@ -111,7 +125,7 @@ def view_camera():
             if time_elapsed > 1/fps:
                 prev = time()
 
-                _print_ascii(frame)
+                _render_colour(frame)
     finally:
         vid.release()
         _ascii_end()
