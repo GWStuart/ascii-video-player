@@ -10,7 +10,8 @@ character = "█" # @#█$
 # ascii_gradient = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'."
 # ascii_gradient = "@0r,."
 # ascii_gradient = "@0r,. "
-ascii_gradient = "@%#*+=-:. "
+ascii_gradient1 = "@%#*+=-:. "
+ascii_gradient2 = "@0r,. "
 
 def _image_fit_to_screen(image):
     # Returns the image resized fit to terminal dimensions
@@ -33,27 +34,29 @@ def _image_best_fit(image):
     return cv2.resize(image, (num_columns, int(num_columns * ratio * 0.5)))
 
 def _render_colour(image):
-    # print("\033[H" + "".join("".join(f"\033[38;2;{pixel[2]};{pixel[1]};{pixel[0]}m{character}" for pixel in row) for row in image), end='')
-    print("\033[H", end="")
-    for row in image:
-        for pixel in row:
-            print(f"\033[38;2;{pixel[2]};{pixel[1]};{pixel[0]}m{character}", end="")
+    print("\033[H" + "".join("".join(f"\033[38;2;{pixel[2]};{pixel[1]};{pixel[0]}m{character}" for pixel in row) for row in image), end='')
+    # print("\033[H", end="")
+    # for row in image:
+    #     for pixel in row:
+    #         print(f"\033[38;2;{pixel[2]};{pixel[1]};{pixel[0]}m{character}", end="")
 
 def _render_grayscale(image):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    print("\033[H", end="")
-    for row in image:
-        for pixel in row:
-            print(f"\033[38;2;{pixel};{pixel};{pixel}m{character}", end="")
+    print("\033[H" + "".join("".join(f"\033[38;2;{pixel};{pixel};{pixel}m{character}" for pixel in row) for row in image), end='')
+    # image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # print("\033[H", end="")
+    # for row in image:
+    #     for pixel in row:
+    #         print(f"\033[38;2;{pixel};{pixel};{pixel}m{character}", end="")
 
-def _render_ascii_gradient(image):
+def _render_ascii_gradient(image, gradient):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    print("\033[H", end="")
-    for row in image:
-        for pixel in row:
-            character = ascii_gradient[round(pixel / 255 * (len(ascii_gradient) - 1))] 
-            print(character, end="")
-            # print(f"\033[38;2;{pixel};{pixel};{pixel}m{character}", end="")
+    print("\033[H" + "".join("".join(f"{gradient[round(pixel / 255 * (len(gradient) - 1))]}" for pixel in row) for row in image), end='')
+    # for row in image:
+    #     for pixel in row:
+    #         character = ascii_gradient[round(pixel / 255 * (len(ascii_gradient) - 1))] 
+    #         print(character, end="")
+    #         # print(f"\033[38;2;{pixel};{pixel};{pixel}m{character}", end="")
 
 def _ascii_end():
     # print(f"\033[{get_terminal_size().lines - 1};{get_terminal_size().columns}H")
@@ -72,7 +75,7 @@ def print_image(path, grayscale=False, ascii_gradient=False, image_fit=1):
     if grayscale:
         _render_grayscale(image)
     elif ascii_gradient:
-        _render_ascii_gradient(image)
+        _render_ascii_gradient(image, gradient=ascii_gradient1)
     else:
         _render_colour(image)
 
@@ -126,7 +129,16 @@ def play_mp4(path):
         vid.release() 
         _ascii_end()
 
-def view_camera():
+def view_camera(grayscale=False, ascii_gradient=False, image_fit=1):
+    if image_fit == 1:
+        fit_function = _image_fit_to_screen
+    elif image_fit == 2:
+        fit_function = _image_fit_to_columns
+    else:
+        fit_function = _image_best_fit
+
+    render_function = _render_grayscale if grayscale else lambda x: _render_ascii_gradient(x, gradient=ascii_gradient2) if ascii_gradient else _render_colour
+
     vid = cv2.VideoCapture(0)
 
     try:
@@ -143,8 +155,8 @@ def view_camera():
             if time_elapsed > 1/fps:
                 prev = time()
 
-                frame = _image_fit_to_screen(frame)
-                _render_colour(frame)
+                frame = fit_function(frame)
+                render_function(frame)
     finally:
         vid.release()
         _ascii_end()

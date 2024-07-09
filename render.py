@@ -32,13 +32,14 @@ parser.add_argument("-b", "--best-fit", action="store_true", help="resize image 
 args = parser.parse_args()
 
 if args.file:
+    image_fit = 2 if args.columns_fit else 3 if args.best_fit else 1
+
     if args.file == "camera":
-        view_camera()
+        view_camera(grayscale=args.gray_scale, ascii_gradient=args.ascii_gradient, image_fit=image_fit)
     elif args.file[:5] == "https":
         play_video(args.file)
     else:
         extension = args.file[args.file.index(".") + 1:]
-        image_fit = 2 if args.columns_fit else 3 if args.best_fit else 1
         if extension in IMAGE_FORMATS:
             print_image(args.file, grayscale=args.gray_scale, ascii_gradient=args.ascii_gradient, image_fit=image_fit)
         elif extension in ["mp4"]:
