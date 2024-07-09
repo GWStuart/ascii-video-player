@@ -26,6 +26,8 @@ parser.add_argument("file", nargs="?", help="file to render")
 parser.add_argument("-g", "--gray-scale", action="store_true", help="render in grayscale")
 parser.add_argument("-a", "--ascii-gradient", action="store_true", help="render using an ascii gradient")
 parser.add_argument("-m", "--mute", action="store_true", help="for videos, play file in mute")
+parser.add_argument("-c", "--columns-fit", action="store_true", help="fit image to termianl screen horiztonally without distorting image")
+parser.add_argument("-b", "--best-fit", action="store_true", help="resize image for best fit without distorting image")
 
 args = parser.parse_args()
 
@@ -36,8 +38,9 @@ if args.file:
         play_video(args.file)
     else:
         extension = args.file[args.file.index(".") + 1:]
+        image_fit = 2 if args.columns_fit else 3 if args.best_fit else 1
         if extension in IMAGE_FORMATS:
-            print_image(args.file, grayscale=args.gray_scale, ascii_gradient=args.ascii_gradient)
+            print_image(args.file, grayscale=args.gray_scale, ascii_gradient=args.ascii_gradient, image_fit=image_fit)
         elif extension in ["mp4"]:
             play_mp4(args.file)
         else:

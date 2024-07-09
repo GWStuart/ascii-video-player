@@ -59,11 +59,15 @@ def _ascii_end():
     # print(f"\033[{get_terminal_size().lines - 1};{get_terminal_size().columns}H")
     print("\033[0m")
 
-def print_image(path, grayscale=False, ascii_gradient=False):
+def print_image(path, grayscale=False, ascii_gradient=False, image_fit=1):
+    # image_fit: 1 -> defaults fit to screen, 2 -> fit to terminal columns, 3 -> best fit to terminal
     image = cv2.imread(path)
-    image = _image_fit_to_screen(image)
-    # image = _image_fit_to_columns(image)
-    # image = _image_best_fit(image)
+    if image_fit == 1:
+        image = _image_fit_to_screen(image)
+    elif image_fit == 2:
+        image = _image_fit_to_columns(image)
+    else:
+        image = _image_best_fit(image)
     
     if grayscale:
         _render_grayscale(image)
@@ -139,6 +143,7 @@ def view_camera():
             if time_elapsed > 1/fps:
                 prev = time()
 
+                frame = _image_fit_to_screen(frame)
                 _render_colour(frame)
     finally:
         vid.release()
