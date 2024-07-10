@@ -149,14 +149,16 @@ def view_camera(grayscale=False, ascii_gradient=False, image_fit=1):
             time_elapsed = time() - prev
             ret, frame = vid.read()
 
-            if keyboard.is_pressed("q"):
-                break
+
+            # if keyboard.is_pressed("q"):
+            #     break
 
             if time_elapsed > 1/fps:
                 prev = time()
 
                 frame = fit_function(frame)
-                render_function(frame)
+                _render_colour(frame)
+                # render_function(frame)
     finally:
         vid.release()
         _ascii_end()
