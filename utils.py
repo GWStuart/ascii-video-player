@@ -11,7 +11,7 @@ character = "█" # @#█$
 # ascii_gradient = "@0r,."
 # ascii_gradient = "@0r,. "
 ascii_gradient1 = "@%#*+=-:. "
-ascii_gradient2 = "@0r,. "
+ascii_gradient2 = "@0r,. "[::-1]
 
 def _image_fit_to_screen(image):
     # Returns the image resized fit to terminal dimensions
@@ -137,7 +137,7 @@ def view_camera(grayscale=False, ascii_gradient=False, image_fit=1):
     else:
         fit_function = _image_best_fit
 
-    render_function = _render_grayscale if grayscale else lambda x: _render_ascii_gradient(x, gradient=ascii_gradient2) if ascii_gradient else _render_colour
+    render_function = _render_grayscale if grayscale else (lambda x: _render_ascii_gradient(x, gradient=ascii_gradient2)) if ascii_gradient else _render_colour
 
     vid = cv2.VideoCapture(0)
 
@@ -157,8 +157,7 @@ def view_camera(grayscale=False, ascii_gradient=False, image_fit=1):
                 prev = time()
 
                 frame = fit_function(frame)
-                _render_colour(frame)
-                # render_function(frame)
+                render_function(frame)
     finally:
         vid.release()
         _ascii_end()

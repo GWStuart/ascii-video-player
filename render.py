@@ -1,6 +1,7 @@
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from sys import argv
 from utils import *
+import subprocess
 
 description = """
 A terminal video player written in python
@@ -32,6 +33,7 @@ parser.add_argument("-b", "--best-fit", action="store_true", help="resize image 
 args = parser.parse_args()
 
 if args.file:
+    subprocess.run(["tput", "smcup"])
     image_fit = 2 if args.columns_fit else 3 if args.best_fit else 1
 
     if args.file == "camera":
@@ -46,5 +48,9 @@ if args.file:
             play_mp4(args.file)
         else:
             print(f"unsupported file: {extension}")
+
+    input("press enter to continue")
+    subprocess.run(["tput", "rmcup"])
 else:
     parser.print_help()
+
