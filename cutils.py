@@ -1,5 +1,6 @@
 from os import get_terminal_size
 import random
+import time
 
 class MatrixHandler:
     def __init__(self, path):
@@ -26,16 +27,15 @@ class MatrixHandler:
                 self.grid[row] = new_row
 
     def render(self):
+        print("\033c")
         if self.init:
             for row in self.grid:
                 print("".join(row))
 
 
 
-print("\033c")
 m = MatrixHandler("")
-m.update()
-m.render()
-# print(m.grid)
-m.update()
-# print(m.grid)
+for i in range(50):
+    m.update()
+    m.render()
+    time.sleep(0.2)
